@@ -1,0 +1,14 @@
+*.pyc
+/build
+/venv
+lambda.zip
+
+# Packages
+*.egg
+*.egg-info
+
+# Others
+*~
+*.swp
+*.DS_Store
+
