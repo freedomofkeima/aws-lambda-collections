@@ -20,8 +20,8 @@ TARGETS = [
         "ecs-cluster-name": "your_ecs_joined_cluster_name" # Target ECS cluster for checking
     }
 ]
-SLACK_WEBHOOK_URL = "YOUR_SLACK_WEBHOOK"
-SLACK_CHANNEL = "YOUR_SLACK_CHANNEL"
+SLACK_WEBHOOK_URL = "YOUR_SLACK_WEBHOOK"  # Slack is optional (set it to None)
+SLACK_CHANNEL = "YOUR_SLACK_CHANNEL"  # Slack is optional (set it to None)
 
 
 def main(event, context):
@@ -163,7 +163,7 @@ class BotoClientFacade(object):
 # Send message to slack
 def send_slack_message(message):
     if SLACK_WEBHOOK_URL is None or SLACK_CHANNEL is None:
-        print "no webhook or channel for Slack"
+        print "no webhook or channel for Slack, Message: \n", message
         return
 
     slack_message = {

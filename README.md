@@ -9,6 +9,7 @@ Another README is provided in each respective directories. This repository conta
 - failover-asg-spot: Failover script between spot and on-demand ASG instances with ECS cluster checking
 - running-instances-monitor: List all running instances in AWS infrastructure
 - scheduled-asg-scaling: Scale-in and Scale-out ASG during specified heavy workload time (cron)
+- scheduled-dynamodb-scaling: Scale DynamoDB throughput based on a specified time (cron) (WARNING: Be careful with DynamoDB decrement limit of 4 times a day)
 
 ## License
 
