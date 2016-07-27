@@ -24,6 +24,7 @@ SLACK_CHANNEL = "YOUR_SLACK_CHANNEL"  # Slack is optional (set it to None)
 
 def main(event, context):
     message = "List of running instances\n"
+
     for region in REGION_NAMES:
         temp = "=============================================\n"
         temp += "Running at {}\n".format(region)
@@ -35,6 +36,7 @@ def main(event, context):
                 'Values': ["running"]
             }
         ]})
+
         count = 0
         for reservation in response['Reservations']:
             for instance in reservation['Instances']:
@@ -46,8 +48,10 @@ def main(event, context):
                         name = tag['Value']
                 temp += "{},{} ({})\n".format(instance_id, name, instance_type)
                 count = count + 1  # increment
+
         if count > 0:
             message += temp  # concatenate message
+
     send_slack_message(message)
     return "finished"
 

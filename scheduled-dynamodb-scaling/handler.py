@@ -12,21 +12,26 @@ SLACK_CHANNEL = "YOUR_SLACK_CHANNEL"  # Slack is optional (set it to None)
 def main(event, context):
     message = "List of scheduled DynamoDB throughput operations\n"
     message += "=============================================\n"
+
     for target in event:
         region = target.get('region-name')
+
         if not region:
             print "region-name is not correctly specified"
             return
+
         dynamodb_client = BotoClientFacade("dynamodb", region)
         try:
             response = dynamodb_client.raw_request("describe_table", {
                 'TableName': target.get('table-name', '')
             })
             provisioned = response['Table']['ProvisionedThroughput']
+
             # Check limit of number decreases
             if provisioned['NumberOfDecreasesToday'] > 3:
                 print "Daily decrement limit reached"
                 continue
+
             # Modify throughput
             if provisioned['ReadCapacityUnits'] != target['read-throughput'] \
                     or provisioned['WriteCapacityUnits'] != target['write-throughput']:
@@ -53,6 +58,7 @@ def main(event, context):
                 )
         except ClientError, e:
             print "Ensure table-name is correctly specified"
+
     send_slack_message(message)
     return "finished"
 

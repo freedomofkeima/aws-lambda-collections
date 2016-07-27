@@ -28,12 +28,14 @@ def main(event, context):
     autoscaling_client = BotoClientFacade("autoscaling", REGION_NAME)
     ecs_client = BotoClientFacade("ecs", REGION_NAME)
     groups = retrieve_asg_groups(autoscaling_client)
+
     # Iterate through all set of ASG targets
     for target in TARGETS:
         if target['asg-spot-name'] not in groups or target['asg-on-demand-name'] not in groups:
             print "Pair target {} and {} are not correct".format(target['asg-spot-name'],
                                                                  target['asg-on-demand-name'])
             continue
+
         # First, we need to determine the number of running spot and on-demand instances
         running_spot = 0
         if 'Instances' in groups[target['asg-spot-name']]:
@@ -41,18 +43,23 @@ def main(event, context):
         running_on_demand = 0
         if 'Instances' in groups[target['asg-on-demand-name']]:
             running_on_demand = len(groups[target['asg-on-demand-name']]['Instances'])
+
         # Check the number of desired spot instances
         desired_spot_count = groups[target['asg-spot-name']]['DesiredCapacity']
+
         # Margin
         margin_spot = min(running_spot, desired_spot_count)
+
         # Calculate
         needed = target['minimum-total-count'] - margin_spot - running_on_demand
+
         # Check number of registered instances in ECS
         registered_instances = ecs_client.multi_request("list_container_instances", {
                                                         'cluster': target['ecs-cluster-name']
                                                         })
         total_registered_instances = len(registered_instances["containerInstanceArns"])
         changed_flag = False
+
         # Check if reverse failover is needed (on-demand -> spot)
         if needed < 0 and running_on_demand > target['minimum-on-demand-count'] \
            and total_registered_instances >= target['minimum-total-count']:
@@ -80,6 +87,7 @@ def main(event, context):
                                                'DesiredCapacity': number_to_set
                                           })
             changed_flag = True
+
         if changed_flag:
             message = "Failover Instances Script\n"
             message += "=============================================\n"
@@ -90,6 +98,7 @@ def main(event, context):
             message += "Number of minimum on-demand instances: {}\n".format(target['minimum-on-demand-count'])
             message += "Number of minimum total instances: {}".format(target['minimum-total-count'])
             send_slack_message(message)
+
     return "finished"
 
 
