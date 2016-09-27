@@ -10,9 +10,10 @@ Another README is provided in each respective directories. This repository conta
 - running-instances-monitor: List all running instances in AWS infrastructure
 - scheduled-asg-scaling: Scale-in and Scale-out ASG during specified heavy workload time (cron)
 - scheduled-dynamodb-scaling: Scale DynamoDB throughput based on a specified time (cron) (WARNING: Be careful with DynamoDB decrement limit of 4 times a day)
+- scheduled-ecs-scaling: Scale ECS task during specified heavy workload time (cron)
 
 ## License
 
 MIT License.
 
-Last Updated: July 27, 2016
+Last Updated: September 27, 2016

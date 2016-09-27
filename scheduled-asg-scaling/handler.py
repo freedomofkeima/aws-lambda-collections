@@ -88,7 +88,6 @@ def main(event, context):
     for target in event:
         region = target.get('region-name')
         if not region:
-            message += "region-name is not recognized\n"
             print "region-name is not correctly specified"
             return
 
